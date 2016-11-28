@@ -58,14 +58,28 @@ public class PickObject : MonoBehaviour {
         // Store the distance of the last raycast.
         _raycastDistance = hit.distance;
 
+        Collider[] allObjectsWithinSphere = Physics.OverlapSphere(hit.point, 1.8f);
+        foreach(Collider collider in allObjectsWithinSphere) {
+          Rigidbody colliderRigidbody = collider.GetComponent<Rigidbody>();
+
+          // Apply a force where the ray hit the object.
+          if(colliderRigidbody != null) {
+            // If the object isn't using gravity, tell it to.
+            colliderRigidbody.useGravity = true;
+
+            // Spawn an explosion where the ray hit the object.
+            colliderRigidbody.AddExplosionForce(5000.0f, hit.point, 10.25f);
+          }
+        }
+
         // Apply a force where the ray hit the object.
-        if(hit.rigidbody != null) {
+        /*if(hit.rigidbody != null) {
           // If the object isn't using gravity, tell it to.
           hit.rigidbody.useGravity = true;
 
           // Spawn an explosion where the ray hit the object.
           hit.rigidbody.AddExplosionForce(5000.0f, hit.point, 10.25f);
-        }
+        }*/
 
         if(materialToChangeTo != null) {
           // Grabs the MeshRenderer from the objectWeHit so that we can change its material.
